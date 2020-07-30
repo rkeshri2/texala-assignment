@@ -1,179 +1,322 @@
-import React, { useState } from "react";
-import jsonpatch from "jsonpatch";
-import ReactJson from "react-json-view";
+import React, { useState, useEffect } from "react";
 const Dashboard = () => {
-  const [jsonObj, setJsonObj] = useState({
-    obj: "",
-    patch: "",
+  const [panel, setPanel] = useState([
+    [{ 0: false }, { 1: false }, { 2: false }],
+    [{ 0: false }, { 1: false }, { 2: false }],
+    [{ 0: false }, { 1: false }, { 2: false }],
+  ]);
+  const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+    document.getElementsByClassName("initblk");
   });
-  const [mergedObj, setMergedObj] = useState();
-  const [operations, setOperations] = useState([]);
 
-  const getJsonObj = (e) => {
-    setJsonObj({ ...jsonObj, [e.target.name]: e.target.value });
-  };
+  const selectGrid = (e, rowindex, colindex) => {
+    // console.log(e.target, colindex + 1);
 
-  const reviewPatch = () => {
-    const patches = JSON.parse(jsonObj.patch);
-    const Obj = JSON.parse(jsonObj.obj);
-    if (Array.isArray(patches)) {
-      patches.map((patch) => {
-        let path = patch["path"].split("/");
-        path.splice(0, 1);
-        const patchDetails = {
-          action: patch["op"],
-          key: path[0],
-          index: path[1],
-          to: patch["value"],
-        };
-        setOperations((prev) => {
-          return [
-            ...prev,
-            patch["op"] == "replace"
-              ? {
-                  ...patchDetails,
-                  from: Array.isArray(Obj[path[0]])
-                    ? path.length > 2
-                      ? Obj[path[0]][1][path[path.length - 1]]
-                      : path.length > 1
-                      ? Obj[path[0]][path[path.length - 1]]
-                      : Obj[path[0]]
-                    : "",
-                }
-              : {
-                  ...patchDetails,
-                },
-          ];
+    const [firstIndex] = panel;
+    //  console.log(colindex, firstIndex.length - 1, rowindex);
+    // if (rowindex == 0) {
+    //   // panel.unshift(firstIndex);
+    //   // setPanel([firstIndex, ...panel]);
+    //   // setPanel(panel);
+    //   // setPanel((prev) => {
+    //   //   return prev.map((row) => {
+    //   //     console.log(row, "111111");
+    //   //     panel.unshift(0);
+    //   //     return panel;
+    //   //     // return [...row, row.length];
+    //   //   });
+    //   //   //    console.log(prev, "4242424");
+    //   //   // return [...prev];
+    //   // });
+    // } else if (rowindex == panel.length - 1) {
+    //   panel.unshift(firstIndex);
+    //   // setPanel([firstIndex, ...panel]);
+    //   setPanel(panel);
+
+    //   // setPanel((prev) => {
+    //   //   return prev.map((row) => {
+    //   //     console.log(row, "111111");
+    //   //     panel.unshift(0);
+    //   //     return panel;
+    //   //     // return [...row, row.length];
+    //   //   });
+    //   //   //    console.log(prev, "4242424");
+    //   //   // return [...prev];
+    //   // });
+    // }
+
+    if (rowindex == 0 && colindex == firstIndex.length - 1) {
+      if (!e.target.classList.contains("selected")) {
+        firstIndex.forEach((item, index) => {
+          return (item[index] = false);
         });
-      });
+        panel.unshift(firstIndex);
+        setPanel((prev) => {
+          return prev.map((row) => {
+            //  console.log(panel[rowindex][colindex]);
+            //  console.log(rowindex, colindex);
+            panel[rowindex][colindex] = { [colindex]: true };
+            return [...row, { [colindex + 1]: false }];
+          });
+        });
+      }
+    } else if (rowindex == 0 && colindex == 0) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("first row first column");
+      }
+    } else if (
+      rowindex == 0 &&
+      colindex != firstIndex.length - 1 &&
+      colindex != 0
+    ) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("first row not first and last column");
+        firstIndex.forEach((item, index) => {
+          return (item[index] = false);
+        });
+        panel.unshift(firstIndex);
+        setPanel((prev) => {
+          return prev.map((row) => {
+            //  console.log(panel[rowindex][colindex]);
+            //  console.log(rowindex, colindex);
+            panel[rowindex][colindex] = { [colindex]: true };
+            return [...row];
+          });
+        });
+      }
+
+      // setPanel(() => {
+      //   // panel.unshift(firstIndex);
+      //   // return panel;
+      //   // panel.push(firstIndex);
+      //   panel.splice(0, 1, firstIndex);
+      //   return panel;
+      //   //  return [...panel, firstIndex];
+      // });
+      //   console.log(panel, "sdfsdfBelow");
+      // setPanel((prev) => {
+      //   return prev.map((row, index) => {
+      //     console.log(row, "a9dfus0df90sd");
+      //     if (index == 0) {
+      //       return [...panel, firstIndex];
+      //     }e
+      //   });
+      //   //    console.log(prev, "4242424");
+      //   // return [...prev];
+      // });
+      // setPanel(panel);
+      //    console.log(prev, "4242424");
+      // return [...prev];
+      //});
+    } else if (
+      rowindex == panel.length - 1 &&
+      colindex == firstIndex.length - 1
+    ) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("last row last column");
+        firstIndex.forEach((item, index) => {
+          return (item[index] = false);
+        });
+        panel.push(firstIndex);
+        setPanel((prev) => {
+          return prev.map((row) => {
+            //  console.log(panel[rowindex][colindex]);
+            //  console.log(rowindex, colindex);
+            panel[rowindex][colindex] = { [colindex]: true };
+            return [...row, { [colindex + 1]: false }];
+          });
+        });
+      }
+
+      // panel.unshift(firstIndex);
+      // setPanel((prev) => {
+      //   return prev.map((row) => {
+      //     console.log(row, "111111");
+      //     return [...row, row.length];
+      //   });
+      //    console.log(prev, "4242424");
+      // return [...prev];
+      // });
+    } else if (rowindex == panel.length - 1 && colindex == 0) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("last row first column");
+      }
+    } else if (
+      rowindex == panel.length - 1 &&
+      colindex != firstIndex.length - 1 &&
+      colindex != 0
+    ) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("last row not first and last column");
+        firstIndex.forEach((item, index) => {
+          return (item[index] = false);
+        });
+        panel.push(firstIndex);
+        setPanel((prev) => {
+          return prev.map((row) => {
+            //  console.log(panel[rowindex][colindex]);
+            //  console.log(rowindex, colindex);
+            panel[rowindex][colindex] = { [colindex]: true };
+            return [...row];
+          });
+        });
+      }
+
+      // setPanel(() => {
+      //   // panel.unshift(firstIndex);
+      //   // return panel;
+      //   // panel.push(firstIndex);
+      //   panel.splice(0, 1, firstIndex);
+      //   return panel;
+      //   //  return [...panel, firstIndex];
+      // });
+      //   console.log(panel, "sdfsdfBelow");
+      // setPanel((prev) => {
+      //   return prev.map((row, index) => {
+      //     console.log(row, "a9dfus0df90sd");
+      //     if (index == 0) {
+      //       return [...panel, firstIndex];
+      //     }e
+      //   });
+      //   //    console.log(prev, "4242424");
+      //   // return [...prev];
+      // });
+      // setPanel(panel);
+      //    console.log(prev, "4242424");
+      // return [...prev];
+      //});
+    } else if (
+      rowindex != 0 &&
+      rowindex != panel.length - 1 &&
+      colindex != firstIndex.length - 1 &&
+      colindex != 0
+    ) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("not first row and last row and not first and last column");
+        setPanel((prev) => {
+          return prev.map((row) => {
+            //  console.log(panel[rowindex][colindex]);
+            //  console.log(rowindex, colindex);
+            panel[rowindex][colindex] = { [colindex]: true };
+            return [...row];
+          });
+        });
+      }
+
+      // panel.unshift(firstIndex);
+      // setPanel((prev) => {
+      //   return prev.map((row) => {
+      //     console.log(row, "111111");
+      //     return [...row, row.length];
+      //   });
+      //    console.log(prev, "4242424");
+      // return [...prev];
+      // });
+    } else if (
+      rowindex != 0 &&
+      rowindex != panel.length - 1 &&
+      colindex == firstIndex.length - 1
+    ) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("not first row and last row and mid last column");
+        // firstIndex.forEach((item, index) => {
+        //   return (item[index] = false);
+        // });
+        // panel.unshift(firstIndex);
+        setPanel((prev) => {
+          return prev.map((row) => {
+            //  console.log(panel[rowindex][colindex]);
+            //  console.log(rowindex, colindex);
+            panel[rowindex][colindex] = { [colindex]: true };
+            return [...row, { [colindex + 1]: false }];
+          });
+        });
+      }
+
+      // panel.unshift(firstIndex);
+      // setPanel((prev) => {
+      //   return prev.map((row) => {
+      //     console.log(row, "111111");
+      //     return [...row, row.length];
+      //   });
+      //    console.log(prev, "4242424");
+      // return [...prev];
+      // });
+    } else if (rowindex != 0 && rowindex != panel.length - 1 && colindex == 0) {
+      if (!e.target.classList.contains("selected")) {
+        console.log("not first row and last row and mid first column");
+      }
+
+      // panel.unshift(firstIndex);
+      // setPanel((prev) => {
+      //   return prev.map((row) => {
+      //     console.log(row, "111111");
+      //     return [...row, row.length];
+      //   });
+      //    console.log(prev, "4242424");
+      // return [...prev];
+      // });
     }
+
+    //  else if (colindex == firstIndex.length - 1) {
+    //   console.log("last column except first and last row");
+    //   // setPanel((prev) => {
+    //   //   return prev.map((row) => {
+    //   //     console.log(row, "111111");
+    //   //     return [...row, row.length];
+    //   //   });
+    //   //   //    console.log(prev, "4242424");
+    //   //   // return [...prev];
+    //   // });
+    // } else if (colindex == 0) {
+    //   console.log("first row except first and last column");
+    //   // setPanel((prev) => {
+    //   //   return prev.map((row) => {
+    //   //     console.log(row, "9sd9fds9");
+    //   //     row.unshift(0);
+    //   //     return row;
+    //   //     // return [...row, row.length];
+    //   //   });
+    //   //   //    console.log(prev, "4242424");
+    //   //   // return [...prev];
+    //   // });
+    // }
+
+    // setPanel((prev) => {
+    //   console.log(prev);
+    //   return [...prev, { 2: "", 3: "" }];
+    // });
+    //   e.target.classList.toggle("selected");
   };
 
-  const removePatchAfterAcceptOrReject = (patch, index) => {
-    setOperations((prev) => {
-      [prev.splice(index, 1)];
-      return prev;
+  const renderPanel = () => {
+    console.log(panel, "renderPanelrenderPanelrenderPanel");
+    return panel.map((row, rowindex) => {
+      return (
+        <tr>
+          {row.map((col, colindex) => {
+            //   console.log(col, "0sd0fsd0", col[colindex]);
+            return (
+              <td
+                className={col[colindex] && "selected"}
+                onClick={(e) => selectGrid(e, rowindex, colindex)}
+              ></td>
+            );
+          })}
+        </tr>
+      );
     });
-    patch.splice(index, 1);
-    const patchString = JSON.stringify(patch);
-    setJsonObj({ ...jsonObj, patch: patchString });
   };
-
-  const merge = (index) => {
-    const obj = JSON.parse(jsonObj.obj);
-    const patch = JSON.parse(jsonObj.patch);
-    let patchedJSON;
-
-    if (!mergedObj) {
-      patchedJSON = jsonpatch.apply_patch(obj, [patch[index]]);
-    } else {
-      patchedJSON = jsonpatch.apply_patch(mergedObj, [patch[index]]);
-    }
-
-    setMergedObj(patchedJSON);
-    removePatchAfterAcceptOrReject(patch, index);
-  };
-
-  const reject = (index) => {
-    const patch = JSON.parse(jsonObj.patch);
-    removePatchAfterAcceptOrReject(patch, index);
-  };
-
-  const returnJSX = (operation, index) => {
-    return (
-      <div key={index} className="actionblk">
-        <h2>Operation: {operation.action} </h2>
-        {operation.action == "replace" ? (
-          <p className="operationsblk">
-            {operation.index && (
-              <>
-                [<span>{operation.index}:</span>
-                <del>{operation.from}</del>
-                <span>
-                  {typeof operation.key == "object"
-                    ? ` ${operation.to.label} - ${operation.to.uri}`
-                    : operation.to}
-                </span>
-                ]
-              </>
-            )}
-          </p>
-        ) : (
-          <p className="operationsblk">
-            {operation.index && (
-              <>
-                [<span>{operation.index}:</span>
-                <span>
-                  {operation.key == "external_profiles"
-                    ? ` ${operation.to.label} - ${operation.to.uri}`
-                    : operation.to}
-                </span>
-                ]
-              </>
-            )}
-          </p>
-        )}
-        <p>Path: {operation.key}</p>
-        <button className="action" onClick={() => merge(index)}>
-          Accept
-        </button>
-        <button className="reject" onClick={() => reject(index)}>
-          Reject
-        </button>
-      </div>
-    );
-  };
-
+  {
+    // console.log(panel, "111111111panelpanelpanel");
+  }
   return (
     <div id="container">
-      <header>Approve and Reject Patch</header>
-      <div className="inputblk">
-        <div className="jsonobj">
-          <p>JSON Object {}</p>
-          <textarea
-            resizable="false"
-            name="obj"
-            value={jsonObj.obj}
-            onChange={(e) => getJsonObj(e)}
-          ></textarea>
-        </div>
-        <div className="jsonpatch">
-          <p>JSON Patch File {}</p>
-          <textarea
-            resizable="false"
-            name="patch"
-            value={jsonObj.patch}
-            onChange={(e) => getJsonObj(e)}
-          ></textarea>
-        </div>
-      </div>
-      <div className="reviewbtn">
-        <button className="update" onClick={reviewPatch}>
-          Review Patch
-        </button>
-      </div>
-      <div className="mergeblk">
-        <div className="actionarea">
-          <p className="heading">Compare Patch</p>
-          <div>
-            {operations.map((operation, index) => {
-              return returnJSX(operation, index);
-            })}
-          </div>
-        </div>
-        <div className="mergedjson">
-          <div className="jsonviewer">
-            <ReactJson
-              shouldCollapse={false}
-              displayObjectSize={false}
-              displayDataTypes={false}
-              collapsed={false}
-              theme="rjv-default"
-              src={mergedObj}
-            />
-          </div>
-        </div>
-      </div>
+      <table cellPadding="0" cellSpacing="0" className="panelbox">
+        {renderPanel()}
+      </table>
     </div>
   );
 };
