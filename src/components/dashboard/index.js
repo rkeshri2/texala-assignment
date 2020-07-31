@@ -26,75 +26,63 @@ const Dashboard = () => {
   const selectGrid = (e, rowindex, colindex) => {
     const [firstIndex] = panel;
     if (rowindex == 0 && colindex == firstIndex.length - 1) {
-      if (!e.target.classList.contains("selected")) {
-        //  console.log("first row last column");
-        panel.unshift(firstIndex);
-        setPanel((prev) => {
-          return prev.map((row) => {
-            const rows = [...row, false];
-            panel[rowindex][colindex] = true;
-            return rows;
-          });
+      // console.log("first row last column");
+      panel.unshift(firstIndex);
+      setPanel((prev) => {
+        return prev.map((row) => {
+          const rows = [...row, false];
+          panel[rowindex][colindex] = true;
+          return rows;
         });
-      }
+      });
     } else if (rowindex == 0 && colindex == 0) {
-      if (!e.target.classList.contains("selected")) {
-        //   console.log("first row first column");
-        panel.unshift(firstIndex);
-        setPanel((prev) => {
-          return prev.map((row) => {
-            const rows = [false, ...row];
-            panel[rowindex][colindex] = true;
-            return rows;
-          });
+      // console.log("first row first column");
+      panel.unshift(firstIndex);
+      setPanel((prev) => {
+        return prev.map((row) => {
+          const rows = [false, ...row];
+          panel[rowindex][colindex] = true;
+          return rows;
         });
-      }
+      });
     } else if (
       rowindex == 0 &&
       colindex != firstIndex.length - 1 &&
       colindex != 0
     ) {
-      if (!e.target.classList.contains("selected")) {
-        //    console.log("first row not first and last column");
-        panel.unshift(firstIndex);
-        setPanel((prev) => {
-          return prev.map((row) => {
-            const rows = [...row];
-            panel[rowindex][colindex] = true;
-            return rows;
-          });
+      // console.log("first row not first and last column");
+      panel.unshift(firstIndex);
+      setPanel((prev) => {
+        return prev.map((row) => {
+          const rows = [...row];
+          panel[rowindex][colindex] = true;
+          return rows;
         });
-      }
+      });
     } else if (
       rowindex == panel.length - 1 &&
       colindex == firstIndex.length - 1
     ) {
-      if (!e.target.classList.contains("selected")) {
-        //    console.log("last row last column");
-        panel.push(firstIndex);
-        selectGridType1(rowindex, colindex);
-      }
+      //  console.log("last row last column");
+      panel.push(firstIndex);
+      selectGridType1(rowindex, colindex);
     } else if (rowindex == panel.length - 1 && colindex == 0) {
-      if (!e.target.classList.contains("selected")) {
-        //    console.log("last row first column");
-        panel.push(firstIndex);
-        setPanel((prev) => {
-          return prev.map((row) => {
-            panel[rowindex][colindex] = true;
-            return [false, ...row];
-          });
+      //  console.log("last row first column");
+      panel.push(firstIndex);
+      setPanel((prev) => {
+        return prev.map((row) => {
+          panel[rowindex][colindex] = true;
+          return [false, ...row];
         });
-      }
+      });
     } else if (
       rowindex == panel.length - 1 &&
       colindex != firstIndex.length - 1 &&
       colindex != 0
     ) {
-      if (!e.target.classList.contains("selected")) {
-        //   console.log("last row not first and last column");
-        panel.push(firstIndex);
-        selectGridType2(rowindex, colindex);
-      }
+      //   console.log("last row not first and last column");
+      panel.push(firstIndex);
+      selectGridType2(rowindex, colindex);
     } else if (
       rowindex != 0 &&
       rowindex != panel.length - 1 &&
@@ -117,21 +105,17 @@ const Dashboard = () => {
       rowindex != panel.length - 1 &&
       colindex == firstIndex.length - 1
     ) {
-      if (!e.target.classList.contains("selected")) {
-        //  console.log("not first row and last row and mid last column");
-        selectGridType1(rowindex, colindex);
-      }
+      //   console.log("not first row and last row and mid last column");
+      selectGridType1(rowindex, colindex);
     } else if (rowindex != 0 && rowindex != panel.length - 1 && colindex == 0) {
-      if (!e.target.classList.contains("selected")) {
-        //     console.log("not first row and last row and mid first column");
-        setPanel((prev) => {
-          return prev.map((row) => {
-            const rows = [false, ...row];
-            panel[rowindex][colindex] = true;
-            return rows;
-          });
+      //     console.log("not first row and last row and mid first column");
+      setPanel((prev) => {
+        return prev.map((row) => {
+          const rows = [false, ...row];
+          panel[rowindex][colindex] = true;
+          return rows;
         });
-      }
+      });
     }
   };
 
