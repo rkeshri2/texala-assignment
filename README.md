@@ -1,2 +1,3 @@
 
-Please run command npm install and run on browser localhost:5100
+-Please run command npm install
+-Running port localhost:5100
