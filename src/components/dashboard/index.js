@@ -31,7 +31,9 @@ const Dashboard = () => {
         panel.unshift(firstIndex);
         setPanel((prev) => {
           return prev.map((row) => {
-            return [...row, false];
+            const rows = [...row, false];
+            panel[rowindex][colindex] = true;
+            return rows;
           });
         });
       }
@@ -41,7 +43,9 @@ const Dashboard = () => {
         panel.unshift(firstIndex);
         setPanel((prev) => {
           return prev.map((row) => {
-            return [false, ...row];
+            const rows = [false, ...row];
+            panel[rowindex][colindex] = true;
+            return rows;
           });
         });
       }
@@ -55,7 +59,9 @@ const Dashboard = () => {
         panel.unshift(firstIndex);
         setPanel((prev) => {
           return prev.map((row) => {
-            return [...row];
+            const rows = [...row];
+            panel[rowindex][colindex] = true;
+            return rows;
           });
         });
       }
@@ -99,9 +105,6 @@ const Dashboard = () => {
         //  console.log("not first row and last row and not first and last column");
         selectGridType2(rowindex, colindex);
       } else {
-        // console.log(
-        //   "not first row and last row and not first and last column clicked again"
-        // );
         setPanel((prev) => {
           return prev.map((row) => {
             panel[rowindex][colindex] = false;
@@ -123,8 +126,9 @@ const Dashboard = () => {
         //     console.log("not first row and last row and mid first column");
         setPanel((prev) => {
           return prev.map((row) => {
-            row.unshift(false);
-            return row;
+            const rows = [false, ...row];
+            panel[rowindex][colindex] = true;
+            return rows;
           });
         });
       }
