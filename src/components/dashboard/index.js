@@ -1,40 +1,46 @@
 import React, { useState } from "react";
 const Dashboard = () => {
   const [panel, setPanel] = useState([
-    [false, false, false],
-    [false, false, false],
-    [false, false, false],
+    [false, false],
+    [false, false],
   ]);
+
+  const selectGridType1 = (rowindex, colindex) => {
+    setPanel((prev) => {
+      return prev.map((row) => {
+        panel[rowindex][colindex] = true;
+        return [...row, false];
+      });
+    });
+  };
+
+  const selectGridType2 = (rowindex, colindex) => {
+    setPanel((prev) => {
+      return prev.map((row) => {
+        panel[rowindex][colindex] = true;
+        return [...row];
+      });
+    });
+  };
 
   const selectGrid = (e, rowindex, colindex) => {
     const [firstIndex] = panel;
     if (rowindex == 0 && colindex == firstIndex.length - 1) {
       if (!e.target.classList.contains("selected")) {
-        firstIndex.forEach((item, index) => {
-          return (item = false);
-        });
+        //  console.log("first row last column");
         panel.unshift(firstIndex);
         setPanel((prev) => {
           return prev.map((row) => {
-            console.log(panel[0]);
-            console.log(rowindex, colindex);
-            // panel[rowindex][colindex] = true;
             return [...row, false];
           });
         });
       }
     } else if (rowindex == 0 && colindex == 0) {
       if (!e.target.classList.contains("selected")) {
-        console.log("first row first column");
-        firstIndex.forEach((item) => {
-          return (item = false);
-        });
+        //   console.log("first row first column");
         panel.unshift(firstIndex);
         setPanel((prev) => {
-          //console.log(prev, "7sdfsd7f");
           return prev.map((row) => {
-            console.log(row, "rowroeor", colindex);
-            //panel[rowindex][colindex] = true;
             return [false, ...row];
           });
         });
@@ -45,18 +51,10 @@ const Dashboard = () => {
       colindex != 0
     ) {
       if (!e.target.classList.contains("selected")) {
-        console.log("first row not first and last column");
-        firstIndex.forEach((item, index) => {
-          return (item = false);
-        });
-        console.log(panel, "before unshift", firstIndex);
+        //    console.log("first row not first and last column");
         panel.unshift(firstIndex);
-        console.log(panel, "after unshift", firstIndex);
         setPanel((prev) => {
           return prev.map((row) => {
-            //  console.log(panel[rowindex][colindex]);
-            //  console.log(rowindex, colindex);
-            // panel[rowindex][colindex] = true;
             return [...row];
           });
         });
@@ -66,29 +64,16 @@ const Dashboard = () => {
       colindex == firstIndex.length - 1
     ) {
       if (!e.target.classList.contains("selected")) {
-        console.log("last row last column");
-        firstIndex.forEach((item) => {
-          return (item = false);
-        });
+        //    console.log("last row last column");
         panel.push(firstIndex);
-        setPanel((prev) => {
-          return prev.map((row) => {
-            panel[rowindex][colindex] = true;
-            return [...row, false];
-          });
-        });
+        selectGridType1(rowindex, colindex);
       }
     } else if (rowindex == panel.length - 1 && colindex == 0) {
       if (!e.target.classList.contains("selected")) {
-        console.log("last row first column");
-        firstIndex.forEach((item) => {
-          return (item = false);
-        });
+        //    console.log("last row first column");
         panel.push(firstIndex);
         setPanel((prev) => {
-          //console.log(prev, "7sdfsd7f");
           return prev.map((row) => {
-            console.log(row, "rowroeor", colindex);
             panel[rowindex][colindex] = true;
             return [false, ...row];
           });
@@ -100,19 +85,9 @@ const Dashboard = () => {
       colindex != 0
     ) {
       if (!e.target.classList.contains("selected")) {
-        console.log("last row not first and last column");
-        firstIndex.forEach((item) => {
-          return (item = false);
-        });
+        //   console.log("last row not first and last column");
         panel.push(firstIndex);
-        setPanel((prev) => {
-          return prev.map((row) => {
-            //  console.log(panel[rowindex][colindex]);
-            //  console.log(rowindex, colindex);
-            panel[rowindex][colindex] = true;
-            return [...row];
-          });
-        });
+        selectGridType2(rowindex, colindex);
       }
     } else if (
       rowindex != 0 &&
@@ -121,23 +96,14 @@ const Dashboard = () => {
       colindex != 0
     ) {
       if (!e.target.classList.contains("selected")) {
-        console.log("not first row and last row and not first and last column");
-        setPanel((prev) => {
-          return prev.map((row) => {
-            //  console.log(panel[rowindex][colindex]);
-            //  console.log(rowindex, colindex);
-            panel[rowindex][colindex] = true;
-            return [...row];
-          });
-        });
+        //  console.log("not first row and last row and not first and last column");
+        selectGridType2(rowindex, colindex);
       } else {
-        console.log(
-          "not first row and last row and not first and last column clicked again"
-        );
+        // console.log(
+        //   "not first row and last row and not first and last column clicked again"
+        // );
         setPanel((prev) => {
           return prev.map((row) => {
-            //  console.log(panel[rowindex][colindex]);
-            //  console.log(rowindex, colindex);
             panel[rowindex][colindex] = false;
             return [...row];
           });
@@ -149,23 +115,15 @@ const Dashboard = () => {
       colindex == firstIndex.length - 1
     ) {
       if (!e.target.classList.contains("selected")) {
-        console.log("not first row and last row and mid last column");
-        setPanel((prev) => {
-          return prev.map((row) => {
-            panel[rowindex][colindex] = true;
-            return [...row, false];
-          });
-        });
+        //  console.log("not first row and last row and mid last column");
+        selectGridType1(rowindex, colindex);
       }
     } else if (rowindex != 0 && rowindex != panel.length - 1 && colindex == 0) {
       if (!e.target.classList.contains("selected")) {
-        console.log("not first row and last row and mid first column");
+        //     console.log("not first row and last row and mid first column");
         setPanel((prev) => {
-          console.log(prev, "7sdfsd7f");
           return prev.map((row) => {
-            console.log(row, "rowroeor", colindex);
             row.unshift(false);
-            // panel[rowindex][colindex] = true;
             return row;
           });
         });
@@ -173,15 +131,27 @@ const Dashboard = () => {
     }
   };
 
+  const bodyClick = (e) => {
+    const tdList = document.getElementsByTagName("td");
+    if (e.target.nodeName == "DIV") {
+      for (let i = 0; i < tdList.length; i++) {
+        tdList[i].style.border = 0;
+      }
+    } else {
+      for (let i = 0; i < tdList.length; i++) {
+        tdList[i].removeAttribute("style");
+      }
+    }
+  };
+
   const renderPanel = () => {
-    console.log(panel, "renderPanelrenderPanelrenderPanel");
     return panel.map((row, rowindex) => {
       return (
-        <tr>
+        <tr key={`rowindex_${rowindex}`}>
           {row.map((col, colindex) => {
-            //   console.log(col, "0sd0fsd0", col[colindex], colindex);
             return (
               <td
+                key={`colindex${colindex}`}
                 className={(col || 0) && "selected"}
                 onClick={(e) => selectGrid(e, rowindex, colindex)}
               ></td>
@@ -191,13 +161,10 @@ const Dashboard = () => {
       );
     });
   };
-  {
-    // console.log(panel, "111111111panelpanelpanel");
-  }
   return (
-    <div id="container">
+    <div id="container" onClick={(e) => bodyClick(e)}>
       <table cellPadding="0" cellSpacing="0" className="panelbox">
-        {renderPanel()}
+        <tbody>{renderPanel()}</tbody>
       </table>
     </div>
   );
